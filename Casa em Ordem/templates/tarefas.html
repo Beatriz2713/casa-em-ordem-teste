@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}
+Tarefas | Casa em Ordem
+{% endblock %}
+
+{% block content %}
+
+<div class="pagina-cabecalho">
+
+    <div>
+        <span class="etiqueta">ORGANIZAÇÃO</span>
+
+        <h1>Tarefas</h1>
+
+        <p>
+            Organize as responsabilidades da família.
+        </p>
+    </div>
+
+    <a href="{{ url_for('nova_tarefa') }}" class="botao-principal">
+        + Nova tarefa
+    </a>
+
+</div>
+
+
+<div class="painel">
+
+    <div class="painel-cabecalho">
+
+        <div>
+            <h2>Tarefas da família</h2>
+
+            <p>
+                Todas as tarefas cadastradas pela família.
+            </p>
+        </div>
+
+    </div>
+
+
+    {% if tarefas %}
+
+        <div class="lista-tarefas">
+
+            {% for tarefa in tarefas %}
+
+                <div class="tarefa-card">
+
+                    <div class="tarefa-info">
+
+                        <h3>{{ tarefa["nome"] }}</h3>
+
+                        {% if tarefa["descricao"] %}
+                            <p>{{ tarefa["descricao"] }}</p>
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="tarefa-detalhes">
+
+                        <span class="tag-tarefa">
+                            {{ tarefa["tipo"]|title }}
+                        </span>
+
+                        {% if tarefa["participa_rodizio"] == 1 %}
+                            <span class="tag-rodizio">
+                                Participa do rodízio
+                            </span>
+                        {% else %}
+                            <span class="tag-sem-rodizio">
+                                Fora do rodízio
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                    <a
+                        href="{{ url_for('editar_tarefa', id_tarefa=tarefa['id_tarefa']) }}"
+                        class="botao-editar"
+                    >
+                        Editar
+                    </a>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('desativar_tarefa', id_tarefa=tarefa['id_tarefa']) }}"
+                        onsubmit="return confirm('Tem certeza que deseja desativar esta tarefa? Ela não aparecerá mais nas tarefas ativas, mas seu histórico será preservado.');"
+                    >
+                        <button type="submit" class="botao-desativar">
+                            Desativar
+                        </button>
+                    </form>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="estado-vazio">
+
+            <span>✓</span>
+
+            <h3>Nenhuma tarefa cadastrada</h3>
+
+            <p>
+                Cadastre a primeira tarefa para começar
+                a organizar a rotina da família.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

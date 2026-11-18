@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Casa em Ordem{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- MENU LATERAL - COMPUTADOR -->
+        <aside class="menu-lateral">
+
+            <div class="menu-logo">
+                <div class="logo-icone">⌂</div>
+
+                <div>
+                    <strong>Casa em Ordem</strong>
+                    <span>Organização da família</span>
+                </div>
+            </div>
+
+            <nav class="menu-navegacao">
+
+                <a href="{{ url_for('dashboard') }}" class="menu-item ativo">
+                    <span>⌂</span>
+                    <span>Início</span>
+                </a>
+
+                <a href="{{ url_for('tarefas') }}" class="menu-item">
+                    <span>✓</span>
+                    <span>Tarefas</span>
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>▣</span>
+                    <span>Agenda</span>
+                </a>
+
+                <a href="{{ url_for('mercado') }}" class="menu-item">
+                    <span>🛒</span>
+                    <span>Mercado</span>
+                </a>
+
+                <a href="{{ url_for('estoque') }}" class="menu-item">
+                    <span>▤</span>
+                    <span>Estoque</span>
+                </a>
+
+                <!-- FAMÍLIA -->
+                <a href="{{ url_for('familia') }}" class="menu-item">
+                    <span>♧</span>
+                    <span>Família</span>
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>◷</span>
+                    <span>Histórico</span>
+                </a>
+
+                <a href="{{ url_for('execucao_tarefas') }}" class="menu-item">
+                    <span>✓</span>
+                    <span>Execução das tarefas</span>
+                </a>
+
+                <a href="{{ url_for('visualizar_rodizio') }}" class="menu-item">
+                    <span>◷</span>
+                    <span>Rodízio de tarefas</span>
+                </a>
+
+                <a href="{{ url_for('produtos') }}">
+                    Produtos
+                </a>
+
+            </nav>
+
+            <div class="menu-final">
+
+                <a href="#" class="menu-item">
+                    <span>⚙</span>
+                    <span>Configurações</span>
+                </a>
+
+                <a href="{{ url_for('logout') }}" class="menu-item sair">
+                    <span>↪</span>
+                    <span>Sair</span>
+                </a>
+
+            </div>
+
+        </aside>
+
+
+        <!-- CONTEÚDO -->
+        <main class="conteudo">
+
+            <header class="cabecalho">
+
+                <div class="cabecalho-mobile-logo">
+                    <div class="logo-icone">⌂</div>
+                    <strong>Casa em Ordem</strong>
+                </div>
+
+                {% if session.get("nome_usuario") %}
+                    <a href="{{ url_for('perfil') }}" class="cabecalho-usuario">
+
+                        <span>{{ session["nome_usuario"] }}</span>
+
+                        <div class="avatar">
+                            {{ session["nome_usuario"][0]|upper }}
+                        </div>
+
+                    </a>
+                {% endif %}
+
+            </header>
+
+
+            <section class="pagina">
+
+                <!-- MENSAGENS DO SISTEMA -->
+                {% with mensagens = get_flashed_messages() %}
+                    {% if mensagens %}
+                        <div class="mensagens">
+                            {% for mensagem in mensagens %}
+                                <p>{{ mensagem }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- CONTEÚDO DE CADA PÁGINA -->
+                {% block content %}
+                {% endblock %}
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- MENU INFERIOR - CELULAR -->
+    <nav class="menu-mobile">
+
+        <a href="{{ url_for('dashboard') }}" class="menu-mobile-item ativo">
+            <span>⌂</span>
+            <small>Início</small>
+        </a>
+
+        <a href="{{ url_for('tarefas') }}" class="menu-mobile-item">
+            <span>✓</span>
+            <small>Tarefas</small>
+        </a>
+
+        <a href="#" class="menu-mobile-item">
+            <span>▣</span>
+            <small>Agenda</small>
+        </a>
+
+        <a href="#" class="menu-mobile-item">
+            <span>🛒</span>
+            <small>Mercado</small>
+        </a>
+
+        <!-- FAMÍLIA -->
+        <a href="{{ url_for('familia') }}" class="menu-mobile-item">
+            <span>♧</span>
+            <small>Família</small>
+        </a>
+
+    </nav>
+
+</body>
+
+</html>

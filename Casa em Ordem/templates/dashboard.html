@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}
+Início | Casa em Ordem
+{% endblock %}
+
+{% block content %}
+
+<div class="pagina-cabecalho">
+
+    <div>
+        <span class="etiqueta">VISÃO GERAL</span>
+
+        <h1>
+            Olá, {{ session["nome_usuario"] }}! 👋
+        </h1>
+
+        <p>
+            Veja o que está acontecendo na sua casa.
+        </p>
+    </div>
+
+</div>
+
+
+<div class="cards-resumo">
+
+    <div class="card-resumo">
+        <span class="card-icone verde">✓</span>
+
+        <div>
+            <span class="card-titulo">Tarefas</span>
+            <strong>0</strong>
+            <small>pendentes</small>
+        </div>
+    </div>
+
+
+    <div class="card-resumo">
+        <span class="card-icone amarelo">▣</span>
+
+        <div>
+            <span class="card-titulo">Agenda</span>
+            <strong>0</strong>
+            <small>próximos eventos</small>
+        </div>
+    </div>
+
+
+    <div class="card-resumo">
+        <span class="card-icone azul">🛒</span>
+
+        <div>
+            <span class="card-titulo">Mercado</span>
+            <strong>0</strong>
+            <small>itens na lista</small>
+        </div>
+    </div>
+
+
+    <div class="card-resumo">
+        <span class="card-icone roxo">▤</span>
+
+        <div>
+            <span class="card-titulo">Estoque</span>
+            <strong>0</strong>
+            <small>itens cadastrados</small>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="dashboard-grid">
+
+    <div class="painel">
+
+        <div class="painel-cabecalho">
+            <div>
+                <h2>Minhas tarefas</h2>
+                <p>O que precisa ser feito esta semana.</p>
+            </div>
+
+            <a href="#">Ver todas</a>
+        </div>
+
+        <div class="estado-vazio">
+            <span>✓</span>
+
+            <h3>Nenhuma tarefa por enquanto</h3>
+
+            <p>
+                Quando suas tarefas forem cadastradas,
+                elas aparecerão aqui.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="painel">
+
+        <div class="painel-cabecalho">
+            <div>
+                <h2>Próximos eventos</h2>
+                <p>O que está acontecendo na família.</p>
+            </div>
+
+            <a href="#">Ver agenda</a>
+        </div>
+
+        <div class="estado-vazio">
+            <span>▣</span>
+
+            <h3>Nenhum evento próximo</h3>
+
+            <p>
+                Os próximos compromissos da família
+                aparecerão aqui.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil | Casa em Ordem{% endblock %}
+
+{% block content %}
+
+<div class="pagina">
+
+    <div class="cabecalho-pagina">
+        <span class="etiqueta">MEU PERFIL</span>
+
+        <h1>Meu perfil</h1>
+
+        <p>
+            Consulte suas informações pessoais e o seu acesso à família.
+        </p>
+    </div>
+
+
+    <div class="perfil-grid">
+
+        <!-- CARTÃO PRINCIPAL -->
+        <div class="card-perfil">
+
+            <div class="perfil-topo">
+
+                <div class="avatar-perfil">
+                    {{ usuario["nome"][0]|upper }}
+                </div>
+
+                <div>
+                    <h2>{{ usuario["nome"] }}</h2>
+
+                    {% if usuario["tipo_usuario"] == "ADMINISTRADOR" %}
+                        <span class="badge-admin">
+                            Administrador
+                        </span>
+                    {% else %}
+                        <span class="badge-membro">
+                            Membro
+                        </span>
+                    {% endif %}
+                </div>
+
+            </div>
+
+
+            <div class="informacoes-perfil">
+
+                <div class="informacao-perfil">
+                    <span>Nome</span>
+                    <strong>{{ usuario["nome"] }}</strong>
+                </div>
+
+                <div class="informacao-perfil">
+                    <span>E-mail</span>
+                    <strong>{{ usuario["email"] }}</strong>
+                </div>
+
+                <div class="informacao-perfil">
+                    <span>Família</span>
+                    <strong>{{ familia["nome"] }}</strong>
+                </div>
+
+                <div class="informacao-perfil">
+                    <span>Tipo de acesso</span>
+
+                    <strong>
+                        {% if usuario["tipo_usuario"] == "ADMINISTRADOR" %}
+                            Administrador
+                        {% else %}
+                            Membro
+                        {% endif %}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AÇÕES -->
+        <div class="card-acoes-perfil">
+
+            <div class="cabecalho-card-perfil">
+                <span class="etiqueta">CONFIGURAÇÕES</span>
+
+                <h2>Minha conta</h2>
+
+                <p>
+                    Em breve você poderá alterar suas informações.
+                </p>
+            </div>
+
+
+            <div class="acoes-perfil">
+
+                <a href="{{ url_for('editar_perfil') }}" class="acao-perfil">
+                    <span class="icone-acao">✎</span>
+
+                    <div>
+                        <strong>Editar meus dados</strong>
+
+                        <small>
+                            Alterar nome e outras informações
+                        </small>
+                    </div>
+                </a>
+
+
+                <a href="{{ url_for('alterar_senha') }}" class="acao-perfil">
+                    <span class="icone-acao">🔒</span>
+
+                    <div>
+                        <strong>Alterar senha</strong>
+
+                        <small>
+                            Trocar a senha da sua conta
+                        </small>
+                    </div>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

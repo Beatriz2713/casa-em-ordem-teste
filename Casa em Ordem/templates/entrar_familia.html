@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Entrar em uma família | Casa em Ordem{% endblock %}
+
+{% block content %}
+
+<div class="cadastro">
+
+    <div class="cadastro-card">
+
+        <div class="logo">
+            <div class="logo-icone">⌂</div>
+
+            <div>
+                <h1>Casa em Ordem</h1>
+                <span>Organização da família</span>
+            </div>
+        </div>
+
+        <div class="cabecalho-cadastro">
+            <span class="etiqueta">ENTRAR EM UMA FAMÍLIA</span>
+
+            <h2>Junte-se à sua família</h2>
+
+            <p>
+                Digite o código recebido de um administrador da família
+                para criar sua conta.
+            </p>
+        </div>
+
+        {% with mensagens = get_flashed_messages() %}
+            {% if mensagens %}
+                <div class="mensagens">
+                    {% for mensagem in mensagens %}
+                        <p>{{ mensagem }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+
+            <div class="campo">
+                <label for="codigo_familia">
+                    Código da família
+                </label>
+
+                <input
+                    type="text"
+                    id="codigo_familia"
+                    name="codigo_familia"
+                    placeholder="Ex.: CASA-7K42P"
+                    required
+                >
+
+                <small>
+                    Peça esse código ao administrador da família.
+                </small>
+            </div>
+
+            <div class="campo">
+                <label for="nome_usuario">
+                    Seu nome
+                </label>
+
+                <input
+                    type="text"
+                    id="nome_usuario"
+                    name="nome_usuario"
+                    placeholder="Digite seu nome"
+                    required
+                >
+            </div>
+
+            <div class="campo">
+                <label for="email">
+                    E-mail
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="seu@email.com"
+                    required
+                >
+            </div>
+
+            <div class="campo">
+                <label for="senha">
+                    Senha
+                </label>
+
+                <input
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    placeholder="Crie uma senha"
+                    required
+                >
+            </div>
+
+            <button type="submit">
+                Entrar na família
+            </button>
+
+        </form>
+
+        <div class="rodape-cadastro">
+            Já tem uma conta?
+            <a href="{{ url_for('login') }}">Entrar</a>
+        </div>
+
+        <div class="rodape-cadastro">
+            Quer criar uma nova família?
+            <a href="{{ url_for('cadastro') }}">Cadastrar família</a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

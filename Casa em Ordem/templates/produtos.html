@@ -1,0 +1,74 @@
+
+{% extends "base.html" %}
+
+{% block title %}Produtos{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <h1>Produtos</h1>
+    <p>Consulte os produtos cadastrados pela sua família.</p>
+
+    <a href="{{ url_for('novo_produto') }}" class="btn-salvar">
+        + Cadastrar produto
+    </a>
+
+    {% if produtos %}
+        <div class="lista-produtos">
+            {% for produto in produtos %}
+                <div class="produto-card">
+                    <h3>{{ produto.nome }}</h3>
+
+                    <p>
+                        <strong>Categoria:</strong>
+                        {{ produto.categoria }}
+                    </p>
+
+                    <p>
+                        <strong>Quantidade atual:</strong>
+                        {{ produto.quantidade_atual }}
+                        {{ produto.unidade_medida }}
+                    </p>
+
+                    <p>
+                        <strong>Controla estoque:</strong>
+                        {{ "Sim" if produto.controla_estoque else "Não" }}
+                    </p>
+
+                    {% if produto.quantidade_minima is not none %}
+                        <p>
+                            <strong>Quantidade mínima:</strong>
+                            {{ produto.quantidade_minima }}
+                            {{ produto.unidade_medida }}
+                        </p>
+                    {% endif %}
+
+                    <div class="form-actions">
+
+                        <a
+                            href="{{ url_for('editar_produto', id_produto=produto.id_produto) }}"
+                            class="btn-salvar"
+                        >
+                            Editar
+                        </a>
+
+                        <form
+                            method="POST"
+                            action="{{ url_for('desativar_produto', id_produto=produto.id_produto) }}"
+                            onsubmit="return confirm('Tem certeza de que deseja desativar este produto?');"
+                        >
+                            <button type="submit" class="btn-cancelar">
+                                Desativar
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Nenhum produto cadastrado ainda.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

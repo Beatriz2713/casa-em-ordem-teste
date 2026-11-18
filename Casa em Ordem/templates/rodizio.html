@@ -1,0 +1,193 @@
+
+{% extends "base.html" %}
+
+{% block title %}Rodízio | Casa em Ordem{% endblock %}
+
+{% block content %}
+
+<div class="cabecalho-pagina">
+    <div>
+        <span class="etiqueta">ORGANIZAÇÃO DA FAMÍLIA</span>
+        <h1>Rodízio de tarefas</h1>
+        <p>Organize e distribua as responsabilidades do próximo mês.</p>
+    </div>
+</div>
+
+{% if session["tipo_usuario"] == "ADMINISTRADOR" %}
+
+<div class="card-execucao">
+    <h2>Gerar nova distribuição</h2>
+    <p>Escolha o mês para criar uma prévia do rodízio.</p>
+
+    <form method="POST" action="{{ url_for('gerar_rodizio') }}">
+
+        <div class="campo">
+            <label for="mes">Mês</label>
+            <select name="mes" id="mes" required>
+                {% for numero, nome in [
+                    (1, 'Janeiro'), (2, 'Fevereiro'),
+                    (3, 'Março'), (4, 'Abril'),
+                    (5, 'Maio'), (6, 'Junho'),
+                    (7, 'Julho'), (8, 'Agosto'),
+                    (9, 'Setembro'), (10, 'Outubro'),
+                    (11, 'Novembro'), (12, 'Dezembro')
+                ] %}
+                    <option value="{{ numero }}"
+                        {% if numero == mes %}selected{% endif %}>
+                        {{ nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="campo">
+            <label for="ano">Ano</label>
+            <input
+                type="number"
+                name="ano"
+                id="ano"
+                value="{{ ano }}"
+                min="2026"
+                required
+            >
+        </div>
+
+        <button type="submit" class="botao-salvar">
+            Gerar prévia
+        </button>
+
+    </form>
+</div>
+
+{% endif %}
+
+<div class="secao-familia">
+
+    <div class="titulo-secao">
+        <div>
+            <span class="etiqueta">DISTRIBUIÇÃO</span>
+            <h2>Rodízio de {{ "%02d"|format(mes) }}/{{ ano }}</h2>
+        </div>
+    </div>
+
+    {% for grupo in distribuicao %}
+
+        <div class="card-execucao">
+
+            <div class="titulo-secao">
+                <div>
+                    <h3>
+                        Semana:
+                        {{ grupo.semana["data_inicio"] }}
+                        até
+                        {{ grupo.semana["data_fim"] }}
+                    </h3>
+                </div>
+
+                {% if grupo.semana["status"] == "RASCUNHO" %}
+                    <span class="status-pendente">Rascunho</span>
+                {% else %}
+                    <span class="status-concluida">Confirmado</span>
+                {% endif %}
+            </div>
+
+            {% for tarefa in grupo.tarefas %}
+
+                <div class="membro-card">
+
+                    <div class="informacoes-membro">
+
+                        <h3>{{ tarefa["nome_tarefa"] }}</h3>
+
+                        <p>
+                            Responsável:
+                            <strong>{{ tarefa["nome_usuario"] }}</strong>
+                        </p>
+
+                        {% if session["tipo_usuario"] == "ADMINISTRADOR"
+                            and grupo.semana["status"] == "RASCUNHO" %}
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'ajustar_rodizio',
+                                    id_rodizio=tarefa['id_rodizio']
+                                ) }}"
+                            >
+
+                                <div class="campo">
+                                    <label>Alterar responsável</label>
+
+                                    <select name="id_usuario" required>
+                                        {% for membro in membros %}
+                                            <option
+                                                value="{{ membro['id_usuario'] }}"
+                                                {% if membro['id_usuario'] == tarefa['id_usuario'] %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ membro['nome'] }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="botao-salvar"
+                                >
+                                    Salvar alteração
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% if tarefa["ajustado_manualmente"] == 1 %}
+                        <span class="badge-membro">Ajustado</span>
+                    {% endif %}
+
+                </div>
+
+            {% else %}
+
+                <p>Nenhuma tarefa nesta semana.</p>
+
+            {% endfor %}
+
+        </div>
+
+    {% endfor %}
+
+    {% if not distribuicao %}
+        <div class="card-vazio">
+            <h3>Nenhum rodízio gerado</h3>
+            <p>Gere uma prévia para visualizar a distribuição.</p>
+        </div>
+    {% endif %}
+
+    {% if distribuicao
+        and session["tipo_usuario"] == "ADMINISTRADOR"
+        and distribuicao[0].semana["status"] == "RASCUNHO" %}
+
+        <form
+            method="POST"
+            action="{{ url_for(
+                'confirmar_rodizio',
+                ano=ano,
+                mes=mes
+            ) }}"
+            onsubmit="return confirm('Deseja confirmar este rodízio?');"
+        >
+            <button type="submit" class="botao-salvar">
+                Confirmar rodízio
+            </button>
+        </form>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

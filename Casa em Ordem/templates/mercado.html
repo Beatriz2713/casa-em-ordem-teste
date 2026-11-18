@@ -1,0 +1,108 @@
+
+{% extends "base.html" %}
+
+{% block title %}Lista de mercado{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <h1>Lista de mercado</h1>
+    <p>Organize os produtos que sua família precisa comprar.</p>
+
+    <!-- ADICIONAR PRODUTO -->
+    <div class="produto-card">
+
+        <h2>Adicionar produto</h2>
+
+        <form method="POST" action="{{ url_for('mercado') }}">
+
+            <div class="form-group">
+                <label for="nome">Nome do produto</label>
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Ex.: Arroz"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="quantidade">Quantidade</label>
+                <input
+                    type="number"
+                    id="quantidade"
+                    name="quantidade"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="Ex.: 2"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="unidade_medida">
+                    Unidade de medida (opcional)
+                </label>
+
+                <input
+                    type="text"
+                    id="unidade_medida"
+                    name="unidade_medida"
+                    placeholder="Ex.: pacotes, litros, unidades..."
+                >
+            </div>
+
+            <button type="submit" class="btn-salvar">
+                + Adicionar à lista
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- PRODUTOS PENDENTES -->
+    <div class="lista-produtos">
+
+        <h2>Produtos pendentes</h2>
+
+        {% if itens_pendentes %}
+
+            {% for item in itens_pendentes %}
+
+                <div class="produto-card">
+
+                    <h3>{{ item.nome_produto }}</h3>
+
+                    <p>
+                        <strong>Quantidade:</strong>
+                        {{ item.quantidade }}
+                        {% if item.unidade_medida %}
+                            {{ item.unidade_medida }}
+                        {% endif %}
+                    </p>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('marcar_comprado', id_item=item.id_item) }}"
+                        onsubmit="return confirm('Deseja marcar este produto como comprado?');"
+                    >
+                        <button type="submit" class="btn-salvar">
+                            Marcar como comprado
+                        </button>
+                    </form>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>Nenhum produto pendente na lista de mercado.</p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+{% endblock %}

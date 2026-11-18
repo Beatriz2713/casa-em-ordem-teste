@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Minha Família | Casa em Ordem{% endblock %}
+
+{% block content %}
+
+<div class="pagina">
+
+    <div class="cabecalho-pagina">
+
+        <div>
+            <span class="etiqueta">MINHA FAMÍLIA</span>
+
+            <h1>{{ familia["nome"] }}</h1>
+
+            <p>
+                Veja quem faz parte da sua família no Casa em Ordem.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- INFORMAÇÕES DA FAMÍLIA -->
+
+    <div class="card-familia">
+
+        <div>
+            <span class="titulo-card">
+                Código da família
+            </span>
+
+            <strong class="codigo-familia">
+                {{ familia["codigo_familia"] | trim }}
+            </strong>
+
+            <p>
+                Compartilhe este código com quem deseja
+                entrar nesta família.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- MEMBROS -->
+
+    <div class="secao-familia">
+
+        <div class="titulo-secao">
+
+            <div>
+                <span class="etiqueta">MEMBROS</span>
+
+                <h2>
+                    Pessoas da família
+                </h2>
+            </div>
+
+            <span class="quantidade-membros">
+                {{ membros|length }}
+            </span>
+
+        </div>
+
+
+        <div class="lista-membros">
+
+            {% for membro in membros %}
+
+                <div class="membro-card">
+
+                    <div class="avatar-membro">
+
+                        {% if membro["foto"] %}
+
+                            <img
+                                src="data:image/jpeg;base64,{{ membro['foto'] }}"
+                                alt="Foto de {{ membro['nome'] }}"
+                            >
+
+                        {% else %}
+
+                            {{ membro["nome"][0]|upper }}
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="informacoes-membro">
+
+                        <h3>
+                            {{ membro["nome"] }}
+                        </h3>
+
+                        <p>
+                            {{ membro["email"] }}
+                        </p>
+
+                        {% if membro["tipo_usuario"] == "ADMINISTRADOR" %}
+
+                            <span class="badge-admin">
+                                Administrador
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge-membro">
+                                Membro
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="status-membro">
+
+                        {% if membro["ativo"] == 1 %}
+
+                            <span class="status-ativo">
+                                Ativo
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-inativo">
+                                Inativo
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <div class="card-vazio">
+
+                    <p>
+                        Ainda não há membros cadastrados.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

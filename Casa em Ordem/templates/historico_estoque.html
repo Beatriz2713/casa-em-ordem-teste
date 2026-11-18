@@ -1,0 +1,100 @@
+
+{% extends "base.html" %}
+
+{% block title %}Histórico do estoque{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>Histórico do estoque</h1>
+
+    <p>
+        Consulte todas as entradas, saídas e ajustes
+        registrados pelos membros da família.
+    </p>
+
+    <a href="{{ url_for('estoque') }}">
+        Voltar ao estoque
+    </a>
+
+    {% if movimentacoes %}
+
+        <div class="lista-produtos">
+
+            {% for movimento in movimentacoes %}
+
+                <div class="produto-card">
+
+                    <h3>{{ movimento.nome_produto }}</h3>
+
+                    {% if movimento.tipo == "ENTRADA" %}
+
+                        <p>
+                            <strong>Tipo:</strong>
+                            Entrada
+                        </p>
+
+                    {% elif movimento.tipo == "SAIDA" %}
+
+                        <p>
+                            <strong>Tipo:</strong>
+                            Saída
+                        </p>
+
+                    {% elif movimento.tipo == "AJUSTE" %}
+
+                        <p>
+                            <strong>Tipo:</strong>
+                            Ajuste manual
+                        </p>
+
+                    {% else %}
+
+                        <p>
+                            <strong>Tipo:</strong>
+                            {{ movimento.tipo }}
+                        </p>
+
+                    {% endif %}
+
+                    <p>
+                        <strong>Quantidade movimentada:</strong>
+                        {{ movimento.quantidade }}
+                        {{ movimento.unidade_medida }}
+                    </p>
+
+                    <p>
+                        <strong>Responsável:</strong>
+                        {{ movimento.nome_usuario }}
+                    </p>
+
+                    <p>
+                        <strong>Data:</strong>
+                        {{ movimento.data_movimentacao }}
+                    </p>
+
+                    {% if movimento.observacao %}
+
+                        <p>
+                            <strong>Observação:</strong>
+                            {{ movimento.observacao }}
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p>Nenhuma movimentação registrada até o momento.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

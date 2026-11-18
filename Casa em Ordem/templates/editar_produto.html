@@ -1,0 +1,123 @@
+
+{% extends "base.html" %}
+
+{% block title %}Editar produto{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <h1>Editar produto</h1>
+    <p>Altere as informações do produto cadastrado.</p>
+
+    <form method="POST" action="{{ url_for('editar_produto', id_produto=produto.id_produto) }}">
+
+        <div class="form-group">
+            <label for="nome">Nome do produto</label>
+            <input
+                type="text"
+                id="nome"
+                name="nome"
+                value="{{ produto.nome }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="id_categoria">Categoria</label>
+            <select id="id_categoria" name="id_categoria" required>
+                <option value="">Selecione uma categoria</option>
+
+                {% for categoria in categorias %}
+                    <option
+                        value="{{ categoria.id_categoria }}"
+                        {% if categoria.id_categoria == produto.id_categoria %}selected{% endif %}
+                    >
+                        {{ categoria.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="unidade_medida">Unidade de medida</label>
+            <select id="unidade_medida" name="unidade_medida" required>
+                <option value="">Selecione</option>
+
+                {% for unidade in [
+                    ('unidade', 'Unidade'),
+                    ('kg', 'Quilograma (kg)'),
+                    ('g', 'Grama (g)'),
+                    ('litro', 'Litro (L)'),
+                    ('ml', 'Mililitro (ml)'),
+                    ('pacote', 'Pacote'),
+                    ('caixa', 'Caixa'),
+                    ('frasco', 'Frasco'),
+                    ('lata', 'Lata'),
+                    ('rolo', 'Rolo')
+                ] %}
+                    <option
+                        value="{{ unidade[0] }}"
+                        {% if produto.unidade_medida == unidade[0] %}selected{% endif %}
+                    >
+                        {{ unidade[1] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="quantidade_atual">Quantidade atual</label>
+            <input
+                type="number"
+                id="quantidade_atual"
+                name="quantidade_atual"
+                min="0"
+                step="0.01"
+                value="{{ produto.quantidade_atual }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="controla_estoque">Controlar estoque?</label>
+            <select id="controla_estoque" name="controla_estoque" required>
+                <option value="sim" {% if produto.controla_estoque == 1 %}selected{% endif %}>
+                    Sim
+                </option>
+                <option value="nao" {% if produto.controla_estoque == 0 %}selected{% endif %}>
+                    Não
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="quantidade_minima">
+                Quantidade mínima (opcional)
+            </label>
+            <input
+                type="number"
+                id="quantidade_minima"
+                name="quantidade_minima"
+                min="0"
+                step="0.01"
+                value="{{ produto.quantidade_minima if produto.quantidade_minima is not none else '' }}"
+                placeholder="Ex.: 2"
+            >
+        </div>
+
+        <div class="form-actions">
+
+            <a href="{{ url_for('produtos') }}" class="btn-cancelar">
+                Cancelar
+            </a>
+
+            <button type="submit" class="btn-salvar">
+                Salvar alterações
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

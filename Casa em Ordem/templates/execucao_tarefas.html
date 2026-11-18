@@ -1,0 +1,167 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Execução das Tarefas | Casa em Ordem
+{% endblock %}
+
+{% block content %}
+
+<div class="pagina">
+
+    <div class="cabecalho-pagina">
+        <div>
+            <span class="etiqueta">ORGANIZAÇÃO DA CASA</span>
+            <h1>Execução das tarefas</h1>
+            <p>
+                Acompanhe as atividades e atualize o andamento
+                das tarefas da família.
+            </p>
+        </div>
+    </div>
+
+    <div class="secao-familia">
+
+        <div class="titulo-secao">
+            <div>
+                <span class="etiqueta">ACOMPANHAMENTO</span>
+                <h2>Tarefas da família</h2>
+            </div>
+
+            <span class="quantidade-membros">
+                {{ execucoes|length }}
+            </span>
+        </div>
+
+        <div class="lista-execucoes">
+
+            {% for tarefa in execucoes %}
+
+                <div class="card-execucao">
+
+                    <div class="informacoes-execucao">
+
+                        <h3>{{ tarefa["nome_tarefa"] }}</h3>
+
+                        {% if tarefa["descricao_tarefa"] %}
+                            <p>{{ tarefa["descricao_tarefa"] }}</p>
+                        {% endif %}
+
+                        <p>
+                            <strong>Responsável:</strong>
+                            {{ tarefa["nome_responsavel"] or "Não definido" }}
+                        </p>
+
+                        {% if tarefa["data_prevista"] %}
+                            <p>
+                                <strong>Data prevista:</strong>
+                                {{ tarefa["data_prevista"] }}
+                            </p>
+                        {% endif %}
+
+                        {% if tarefa["status"] == "CONCLUIDA" %}
+                            <p>
+                                <strong>Realizada por:</strong>
+                                {{ tarefa["nome_realizador"] or "Não identificado" }}
+                            </p>
+
+                            <p>
+                                <strong>Conclusão:</strong>
+                                {{ tarefa["data_conclusao"] }}
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="status-execucao">
+
+                        {% if tarefa["status"] == "PENDENTE" %}
+                            <span class="status-pendente">
+                                Pendente
+                            </span>
+
+                        {% elif tarefa["status"] == "EM_ANDAMENTO" %}
+                            <span class="status-andamento">
+                                Em andamento
+                            </span>
+
+                        {% elif tarefa["status"] == "CONCLUIDA" %}
+                            <span class="status-concluida">
+                                Concluída
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'atualizar_execucao',
+                            id_execucao=tarefa['id_execucao']
+                        ) }}"
+                        class="form-status"
+                    >
+
+                        <label for="status-{{ tarefa['id_execucao'] }}">
+                            Atualizar status
+                        </label>
+
+                        <select
+                            name="status"
+                            id="status-{{ tarefa['id_execucao'] }}"
+                        >
+                            <option
+                                value="PENDENTE"
+                                {% if tarefa["status"] == "PENDENTE" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Pendente
+                            </option>
+
+                            <option
+                                value="EM_ANDAMENTO"
+                                {% if tarefa["status"] == "EM_ANDAMENTO" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Em andamento
+                            </option>
+
+                            <option
+                                value="CONCLUIDA"
+                                {% if tarefa["status"] == "CONCLUIDA" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Concluída
+                            </option>
+                        </select>
+
+                        <button type="submit">
+                            Salvar status
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% else %}
+
+                <div class="card-vazio">
+                    <h3>Nenhuma tarefa para acompanhar</h3>
+                    <p>
+                        As tarefas aparecerão aqui quando forem
+                        distribuídas para execução.
+                    </p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

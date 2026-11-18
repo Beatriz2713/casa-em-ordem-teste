@@ -1,0 +1,221 @@
+
+{% extends "base.html" %}
+
+{% block title %}Estoque{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>Estoque da família</h1>
+
+    <p>Acompanhe os produtos e suas quantidades disponíveis.</p>
+
+    <!-- HISTÓRICO -->
+
+    <a href="{{ url_for('historico_estoque') }}">
+        Consultar histórico de movimentações
+    </a>
+
+    <!-- RESUMO -->
+
+    <div class="lista-produtos">
+
+        <div class="produto-card">
+            <h3>{{ total_produtos }}</h3>
+            <p>Produtos cadastrados</p>
+        </div>
+
+        <div class="produto-card">
+            <h3>{{ total_baixos }}</h3>
+            <p>Produtos com estoque baixo</p>
+        </div>
+
+        <div class="produto-card">
+            <h3>{{ total_normais }}</h3>
+            <p>Produtos com estoque normal</p>
+        </div>
+
+    </div>
+
+    <!-- PRODUTOS -->
+
+    <h2>Produtos cadastrados</h2>
+
+    {% if produtos %}
+
+        {% for produto in produtos %}
+
+            <div class="produto-card">
+
+                <h3>{{ produto.nome }}</h3>
+
+                <p>
+                    <strong>Quantidade disponível:</strong>
+                    {{ produto.quantidade_atual }}
+                    {{ produto.unidade_medida }}
+                </p>
+
+                {% if produto.quantidade_minima is not none
+                      and produto.quantidade_atual <= produto.quantidade_minima %}
+
+                    <p><strong>Estoque baixo</strong></p>
+
+                {% else %}
+
+                    <p>Estoque normal</p>
+
+                {% endif %}
+
+                {% if produto.quantidade_minima is not none %}
+
+                    <p>
+                        Quantidade mínima:
+                        {{ produto.quantidade_minima }}
+                        {{ produto.unidade_medida }}
+                    </p>
+
+                {% endif %}
+
+                <hr>
+
+                <!-- ENTRADA -->
+
+                <h4>Registrar entrada</h4>
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'movimentar_estoque',
+                        id_produto=produto.id_produto
+                    ) }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="tipo"
+                        value="ENTRADA"
+                    >
+
+                    <label>Quantidade recebida</label>
+
+                    <input
+                        type="number"
+                        name="quantidade"
+                        min="0.01"
+                        step="0.01"
+                        required
+                    >
+
+                    <label>Observação (opcional)</label>
+
+                    <input
+                        type="text"
+                        name="observacao"
+                        placeholder="Ex.: Compra no mercado"
+                    >
+
+                    <button type="submit" class="btn-salvar">
+                        + Registrar entrada
+                    </button>
+
+                </form>
+
+                <hr>
+
+                <!-- SAÍDA -->
+
+                <h4>Registrar saída</h4>
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'movimentar_estoque',
+                        id_produto=produto.id_produto
+                    ) }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="tipo"
+                        value="SAIDA"
+                    >
+
+                    <label>Quantidade retirada</label>
+
+                    <input
+                        type="number"
+                        name="quantidade"
+                        min="0.01"
+                        step="0.01"
+                        required
+                    >
+
+                    <label>Observação (opcional)</label>
+
+                    <input
+                        type="text"
+                        name="observacao"
+                        placeholder="Ex.: Produto utilizado"
+                    >
+
+                    <button type="submit" class="btn-salvar">
+                        - Registrar saída
+                    </button>
+
+                </form>
+
+                <hr>
+
+                <!-- AJUSTE MANUAL -->
+
+                <h4>Ajustar quantidade disponível</h4>
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'ajustar_estoque',
+                        id_produto=produto.id_produto
+                    ) }}"
+                >
+
+                    <label>Quantidade real disponível</label>
+
+                    <input
+                        type="number"
+                        name="quantidade"
+                        min="0"
+                        step="0.01"
+                        value="{{ produto.quantidade_atual }}"
+                        required
+                    >
+
+                    <label>Motivo do ajuste (opcional)</label>
+
+                    <input
+                        type="text"
+                        name="observacao"
+                        placeholder="Ex.: Conferência da despensa"
+                    >
+
+                    <button type="submit" class="btn-salvar">
+                        Atualizar estoque
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            Nenhum produto com controle de estoque ativado.
+        </p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

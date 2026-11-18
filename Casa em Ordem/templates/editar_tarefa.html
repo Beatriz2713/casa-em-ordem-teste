@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}
+Editar tarefa | Casa em Ordem
+{% endblock %}
+
+{% block content %}
+
+<div class="pagina-cabecalho">
+
+    <div>
+        <span class="etiqueta">TAREFAS</span>
+
+        <h1>Editar tarefa</h1>
+
+        <p>
+            Altere as informações dessa tarefa.
+        </p>
+    </div>
+
+</div>
+
+
+<div class="painel formulario-painel">
+
+    <form method="POST">
+
+        <div class="campo">
+
+            <label for="nome">
+                Nome da tarefa
+            </label>
+
+            <input
+                type="text"
+                id="nome"
+                name="nome"
+                value="{{ tarefa['nome'] }}"
+                required
+            >
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="descricao">
+                Descrição
+            </label>
+
+            <textarea
+                id="descricao"
+                name="descricao"
+                rows="4"
+            >{{ tarefa['descricao'] or '' }}</textarea>
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="tipo">
+                Tipo de tarefa
+            </label>
+
+            <select
+                id="tipo"
+                name="tipo"
+                required
+            >
+
+                <option
+                    value="REGULAR"
+                    {% if tarefa['tipo'] == 'REGULAR' %}selected{% endif %}
+                >
+                    Regular
+                </option>
+
+                <option
+                    value="EXTRA"
+                    {% if tarefa['tipo'] == 'EXTRA' %}selected{% endif %}
+                >
+                    Extra
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="participa_rodizio">
+                Participa do rodízio?
+            </label>
+
+            <select
+                id="participa_rodizio"
+                name="participa_rodizio"
+                required
+            >
+
+                <option
+                    value="1"
+                    {% if tarefa['participa_rodizio'] == 1 %}selected{% endif %}
+                >
+                    Sim
+                </option>
+
+                <option
+                    value="0"
+                    {% if tarefa['participa_rodizio'] == 0 %}selected{% endif %}
+                >
+                    Não
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="peso">
+                Peso da tarefa
+            </label>
+
+            <input
+                type="number"
+                id="peso"
+                name="peso"
+                value="{{ tarefa['peso'] }}"
+                min="0.1"
+                step="0.1"
+                required
+            >
+
+            <small>
+                Use um valor maior para tarefas mais pesadas.
+            </small>
+
+        </div>
+
+
+        <div class="formulario-acoes">
+
+            <a
+                href="{{ url_for('tarefas') }}"
+                class="botao-secundario"
+            >
+                Cancelar
+            </a>
+
+            <button
+                type="submit"
+                class="botao-principal"
+            >
+                Salvar alterações
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
